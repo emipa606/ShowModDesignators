@@ -1,63 +1,62 @@
-﻿using System.Linq;
+using System;
+using System.Linq;
+using RimWorld;
+using Verse;
 
-namespace ShowModDesignators
+namespace ShowModDesignators;
+
+[StaticConstructorOnStartup]
+public class ShowModDesignators
 {
-    using System;
-    using JetBrains.Annotations;
-    using RimWorld;
-    using Verse;
-
-    [StaticConstructorOnStartup]
-    [UsedImplicitly]
-    public class ShowModDesignators
+    static ShowModDesignators()
     {
-        static ShowModDesignators()
+        foreach (var modContentPack in LoadedModManager.RunningMods.Where(mcp => !mcp.IsCoreMod))
         {
-            foreach (ModContentPack mcp in LoadedModManager.RunningMods.Where(predicate: mcp => !mcp.IsCoreMod))
-                foreach (Def def in mcp.AllDefs)
+            foreach (var allDef in modContentPack.AllDefs)
+            {
+                try
                 {
-                    try
+                    var text = $"\n({modContentPack.Name})".Replace('[', '(').Replace(']', ')');
+                    if (!allDef.description.NullOrEmpty())
                     {
-                        string nameAdd = $"\n({mcp.Name})".Replace(oldChar: '[', newChar: '(').Replace(oldChar: ']', newChar: ')');
+                        allDef.description += text;
+                    }
 
-                        if (!def.description.NullOrEmpty())
-                            def.description += nameAdd;
-
-
-                        switch (def)
+                    if (allDef is not TraitDef traitDef)
+                    {
+                        if (allDef is not ThingDef { race: { } } thingDef)
                         {
-                            case TraitDef trd:
-                                foreach (TraitDegreeData trdd in trd.degreeDatas)
-                                    trdd.description += nameAdd;
-                                break;
-                            case ThingDef td:
-                                if (td.race != null)
-                                {
-                                    if(td.race.meatDef != null)
-                                        td.race.meatDef.description += nameAdd;
-                                    if(td.race.corpseDef != null)
-                                        td.race.corpseDef.description += nameAdd;
-                                    if(td.race.leatherDef != null)
-                                        td.race.leatherDef.description += nameAdd;
-                                }
-
-                                /*if (td.recipeMaker != null)
-                                    DefDatabase<RecipeDef>.GetNamed(defName: "Make_" + td.defName).description += nameAdd;
-                                if(td.IsDrug)
-                                    DefDatabase<RecipeDef>.GetNamed(defName: "Administer_" + td.defName).description += nameAdd;*/
-                                break;
+                            continue;
                         }
 
-                        if (BackstoryDatabase.allBackstories.TryGetValue(key: def.defName, value: out Backstory bs))
-                            bs.baseDesc += nameAdd;
+                        if (thingDef.race.meatDef != null)
+                        {
+                            thingDef.race.meatDef.description += text;
+                        }
 
+                        if (thingDef.race.corpseDef != null)
+                        {
+                            thingDef.race.corpseDef.description += text;
+                        }
 
+                        if (thingDef.race.leatherDef != null)
+                        {
+                            thingDef.race.leatherDef.description += text;
+                        }
                     }
-                    catch (Exception)
+                    else
                     {
-                        Log.Error(text: $"ModDesignator: {def.defName} of {def.GetType()} is evil");
+                        foreach (var degreeData in traitDef.degreeDatas)
+                        {
+                            degreeData.description += text;
+                        }
                     }
                 }
+                catch (Exception)
+                {
+                    Log.Error($"ModDesignator: {allDef.defName} of {allDef.GetType()} is evil");
+                }
+            }
         }
     }
 }
