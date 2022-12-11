@@ -37,3 +37,4 @@ https://github.com/RimWorld-CCL-Reborn/ShowModDesignators
 -  If you have the solution for a problem, please post it to the GitHub repository.
 
 
+https://steamcommunity.com/sharedfiles/filedetails/changelog/2891633620]Last updated 2022-12-11

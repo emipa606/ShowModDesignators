@@ -17,7 +17,7 @@ public class ShowModDesignators
                 try
                 {
                     var text = $"\n({modContentPack.Name})".Replace('[', '(').Replace(']', ')');
-                    if (!allDef.description.NullOrEmpty())
+                    if (!allDef.description.NullOrEmpty() && !allDef.description.EndsWith(text))
                     {
                         allDef.description += text;
                     }
@@ -29,17 +29,17 @@ public class ShowModDesignators
                             continue;
                         }
 
-                        if (thingDef.race.meatDef != null)
+                        if (thingDef.race.meatDef != null && !thingDef.race.meatDef.description.EndsWith(text))
                         {
                             thingDef.race.meatDef.description += text;
                         }
 
-                        if (thingDef.race.corpseDef != null)
+                        if (thingDef.race.corpseDef != null && !thingDef.race.corpseDef.description.EndsWith(text))
                         {
                             thingDef.race.corpseDef.description += text;
                         }
 
-                        if (thingDef.race.leatherDef != null)
+                        if (thingDef.race.leatherDef != null && !thingDef.race.leatherDef.description.EndsWith(text))
                         {
                             thingDef.race.leatherDef.description += text;
                         }
@@ -48,7 +48,10 @@ public class ShowModDesignators
                     {
                         foreach (var degreeData in traitDef.degreeDatas)
                         {
-                            degreeData.description += text;
+                            if (!degreeData.description.EndsWith(text))
+                            {
+                                degreeData.description += text;
+                            }
                         }
                     }
                 }

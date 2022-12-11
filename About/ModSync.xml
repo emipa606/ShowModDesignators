@@ -2,7 +2,7 @@
 <ModSyncNinjaData>
   <ID>50724ce2-114d-43f4-ae97-e478b5395147</ID>
   <ModName>ShowModDesignators (Continued)</ModName>
-  <Version>1.4.1</Version>
+  <Version>1.4.2</Version>
   <SaveBreaking>False</SaveBreaking>
   <Host name="Github">
     <Owner>emipa606</Owner>
@@ -12,8 +12,3 @@
     <Branch>master</Branch>
   </Host>
 </ModSyncNinjaData>
-
-
-
-
-
