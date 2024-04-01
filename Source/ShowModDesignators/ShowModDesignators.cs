@@ -24,7 +24,7 @@ public class ShowModDesignators
 
                     if (allDef is not TraitDef traitDef)
                     {
-                        if (allDef is not ThingDef { race: { } } thingDef)
+                        if (allDef is not ThingDef { race: not null } thingDef || thingDef.IsCorpse)
                         {
                             continue;
                         }
